@@ -1,5 +1,5 @@
 # Ghostwriter 👻
-A Chrome extension whose ghost whispers your next words in real textboxes. Starts as normal autocomplete, grows uncanny.
+A Chrome extension whose ghost whispers your next words in real textboxes. Full haunt from the first keystroke: whispers, apparitions, blackout, poltergeist.
 
 ## Install
 chrome://extensions -> Developer mode -> Load unpacked -> select this folder.
@@ -13,7 +13,8 @@ At stage 2+ the ghost may turn the lights off: a 6-second flickering blackout, a
 
 ## Safety
 - Opt-in per site; nothing runs elsewhere (no reads, no sends).
-- Overlay only: it never types, inserts or deletes anything.
+- Overlay only by default: it never types, inserts or deletes anything.
+- Poltergeist (popup toggle, on by default): after you delete a letter the ghost may type a letter back into the box you are editing. Ctrl+Z undoes it. Skipped in password/card/OTP fields.
 - Password / card / OTP fields are skipped.
 - Memory is opt-in, local, clearable.
 

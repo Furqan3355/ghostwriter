@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Ghostwriter",
   "version": "0.1.0",
-  "description": "A ghost whispers your next words. Opt-in per site. Overlay only. Esc banishes it.",
+  "description": "A ghost whispers your next words. Opt-in per site. Overlay only by default. Esc banishes it.",
   "permissions": ["storage", "activeTab", "unlimitedStorage"],
   "host_permissions": [
     "https://api.groq.com/*",

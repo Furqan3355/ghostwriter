@@ -5,6 +5,7 @@ async function refresh() {
   const s = await chrome.storage.local.get(["enabled", "sites"]);
   $("enabled").checked = s.enabled !== false;
   $("demo").checked = !!(await chrome.storage.local.get("demoMode")).demoMode;
+  $("polt").checked = (await chrome.storage.local.get("poltergeist")).poltergeist !== false;
   const on = host && (s.sites || []).includes(host);
   $("haunt").textContent = on ? "Banish from this site" : "Haunt this site";
   $("host").textContent = host ? (on ? "👻 haunting: " + host : "not haunted: " + host) : "This page can't be haunted";
@@ -29,12 +30,11 @@ $("reset").onclick = async () => { await chrome.storage.local.set({ shown: 0 });
 $("clear").onclick = async () => { await chrome.storage.local.set({ memory: [] }); $("status").textContent = "Memories cleared."; };
 $("opts").onclick = e => { e.preventDefault(); chrome.runtime.openOptionsPage(); };
 
+$("polt").onchange = e => chrome.storage.local.set({ poltergeist: e.target.checked });
 $("demo").onchange = e => chrome.storage.local.set({ demoMode: e.target.checked });
 
 async function showStage() {
-  const s = await chrome.storage.local.get(["shown", "demoMode"]);
-  const step = s.demoMode ? 1 : 3;
-  $("stage").textContent = "Current stage: " + Math.min(3, Math.floor((s.shown || 0) / step)) + " (shown " + (s.shown || 0) + ")";
+  $("stage").textContent = "Full haunt: sab kuch ek saath";
 }
 showStage();
 $("jump").onclick = async () => { await chrome.storage.local.set({ shown: 9, enabled: true }); $("status").textContent = "Stage 3. Ab textbox mein likho."; showStage(); };

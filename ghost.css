@@ -82,14 +82,14 @@
 @media (prefers-reduced-motion: reduce) { .gw-fig { display: none; } }
 
 .gw-blackout { position: fixed; inset: 0; z-index: 2147483647; pointer-events: none; background: #000; opacity: 0;
-  animation: gw-lights 6s linear forwards; }
+  animation: gw-lights 7s linear forwards; }
 @keyframes gw-lights {
   0% { opacity: 0; } 4% { opacity: 1; } 6% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.4; }
   15%, 90% { opacity: 1; } 100% { opacity: 0; } }
 .gw-bfig { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(-50%, -50%) scale(0.55);
   animation: gw-loomer 6s ease-in forwards; }
-.gw-bfig img, .gw-bfig svg { height: 70vh; width: auto; display: block; filter: drop-shadow(0 0 35px rgba(210, 210, 255, 0.6)) brightness(1.1); }
-.gw-bfig svg { width: calc(70vh * 0.83); }
+.gw-bfig img, .gw-bfig svg { height: var(--bh, 70vh); width: auto; display: block; filter: drop-shadow(0 0 35px rgba(210, 210, 255, 0.6)) brightness(1.1); }
+.gw-bfig svg { width: calc(var(--bh, 70vh) * 0.83); }
 @keyframes gw-loomer {
   0%, 30% { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
   38% { opacity: 0.5; }

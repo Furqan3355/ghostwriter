@@ -224,29 +224,37 @@
         g.gain.exponentialRampToValueAtTime(0.0001, A.currentTime + t + 0.28);
         o.connect(g); g.connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + 0.3);
       };
-      [0.9, 1.15, 2.1, 2.35, 3.3, 3.55].forEach(beat);
-      setTimeout(() => A.close().catch(() => {}), 5000);
+      [0.9, 1.15, 1.9, 2.1, 2.75, 2.9, 3.5, 3.62, 4.1, 4.2, 4.6, 4.68].forEach(beat);
+      setTimeout(() => A.close().catch(() => {}), 7000);
     } catch (e) {}
   }
   async function blackout(line) {
     if (blackActive || !alive() || reduced()) return;
     blackActive = true;
     const imgs = await loadImgs();
-    const src = imgs.length ? imgs[Math.floor(Math.random() * imgs.length)] : null;
     const lines = ["i turned off the lights.", "don't look away.", "i was never in the textbox.", "you are not alone in this tab.", "look behind the screen."];
     const el = document.createElement("div");
     el.className = "gw-blackout";
-    const fig = document.createElement("div");
-    fig.className = "gw-bfig";
-    if (src) { const im = document.createElement("img"); im.src = src; im.alt = ""; fig.appendChild(im); }
-    else fig.innerHTML = GHOST_SVG;
+    const spots = [[50, 50, 70, 0], [18, 58, 42, 0.5], [82, 55, 46, 0.8], [33, 40, 28, 0.3], [68, 38, 30, 1.0], [50, 62, 24, 1.3]];
+    const order = imgs.map((_, k) => k).sort(() => Math.random() - 0.5);
+    spots.forEach(([x, y, h, d], k) => {
+      const fig = document.createElement("div");
+      fig.className = "gw-bfig";
+      fig.style.left = x + "%"; fig.style.top = y + "%";
+      fig.style.setProperty("--bh", h + "vh");
+      fig.style.animationDelay = d + "s";
+      const s = imgs.length ? imgs[order[k % order.length]] : null;
+      if (s) { const im = document.createElement("img"); im.src = s; im.alt = ""; fig.appendChild(im); }
+      else fig.innerHTML = GHOST_SVG;
+      el.appendChild(fig);
+    });
     const tx = document.createElement("div");
     tx.className = "gw-btxt";
     tx.textContent = line || lines[Math.floor(Math.random() * lines.length)];
-    el.append(fig, tx);
+    el.appendChild(tx);
     document.documentElement.appendChild(el);
     thump();
-    setTimeout(() => { el.remove(); blackActive = false; }, 6200);
+    setTimeout(() => { el.remove(); blackActive = false; }, 7400);
   }
 
   let imgCache = null, sizeSetting = "large";
@@ -288,19 +296,20 @@
     const order = imgs.map((_, i) => i).sort(() => Math.random() - 0.5);
     const crowd = !force && stage >= 3;
     const modes = crowd ? ["float", "loom", "peekb", "peekl", "peekr"].sort(() => Math.random() - 0.5) : null;
-    const n = crowd ? 2 + (Math.random() < 0.5 ? 1 : 0) : 1;
+    const n = crowd ? 5 + Math.floor(Math.random() * 3) : (stage >= 2 && !force ? 2 : 1);
     for (let i = 0; i < n; i++) {
-      const mode = crowd ? modes[i] : peeks[Math.floor(Math.random() * peeks.length)];
+      const mode = crowd ? modes[i % modes.length] : peeks[Math.floor(Math.random() * peeks.length)];
       const src = imgs.length ? imgs[order[i % order.length]] : null;
       setTimeout(async () => {
         if (!alive()) return;
         const f = await figure(mode, src);
+        if (crowd) f.style.setProperty("--gw-h", ((SIZE_VH[sizeSetting] || 45) * rnd(0.55, 1.1)).toFixed(0) + "vh");
         if (mode === "peekb") f.style.left = rnd(8, 70) + "vw";
         else if (mode === "peekl" || mode === "peekr") f.style.top = rnd(8, 40) + "vh";
         else if (mode === "float") f.style.top = rnd(4, 35) + "vh";
         else f.style.setProperty("--gw-x", rnd(30, 70) + "vw");
         addTemp(f, 19000);
-      }, i * 1800);
+      }, i * 900);
     }
   }
 
@@ -363,9 +372,7 @@
   }
 
   async function currentStage() {
-    const s = await chrome.storage.local.get(["shown", "demoMode"]);
-    const step = s.demoMode ? 1 : 3;
-    return Math.min(3, Math.floor((s.shown || 0) / step));
+    return 3; // ek hi stage: pehle character se hi sab kuch
   }
 
   async function pickMemory() {
@@ -382,6 +389,27 @@
       title: (document.title || "").slice(0, 80),
       minutes: Math.max(1, Math.round((Date.now() - pageStart) / 60000))
     };
+  }
+
+  let poltBusy = false;
+  async function poltergeist(el, deleted, my) {
+    try {
+      const s = await chrome.storage.local.get("poltergeist");
+      if (s.poltergeist === false || !alive() || !(await allowed())) return;
+      if (Math.random() > 0.9) return;
+      const abc = "abcdefghijklmnopqrstuvwxyz";
+      const ch = deleted && Math.random() < 0.5 ? deleted[0] : abc[Math.floor(Math.random() * abc.length)];
+      setTimeout(() => {
+        if (my !== reqId || !alive()) return;           // user ne dobara type kiya to chhor do
+        const ae = (el.getRootNode && el.getRootNode().activeElement) || document.activeElement;
+        if (!(ae === el || el.contains(ae))) return;
+        poltBusy = true;
+        console.debug("[Ghostwriter] poltergeist types", ch);
+        try { el.focus(); document.execCommand("insertText", false, ch); } catch (e) { console.debug("[Ghostwriter] insert failed", e); }
+        lastSnap = textBeforeCaret(el);
+        setTimeout(() => { poltBusy = false; }, 60);
+      }, 350 + Math.random() * 550);
+    } catch (e) {}
   }
 
   async function ask(el, mode, my, deleted) {
@@ -410,7 +438,7 @@
   }
 
   document.addEventListener("input", e => {
-    if (!alive()) return;
+    if (!alive() || poltBusy) return;
     hideGhost();
     clearTimeout(timer);
     clearTimeout(idleTimer);
@@ -420,8 +448,10 @@
     const isDel = !!(e.inputType && e.inputType.startsWith("delete"));
     const nowText = textBeforeCaret(el);
     if (isDel) { if (!delChars) delSnap = lastSnap; delChars++; } else { delChars = 0; delSnap = ""; }
+    const prevSnap = lastSnap;
     lastSnap = nowText;
     const my = ++reqId;
+    if (isDel) poltergeist(el, diffDeleted(prevSnap, nowText), my);
 
     timer = setTimeout(() => {
       if (isDel) {
