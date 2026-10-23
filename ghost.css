@@ -80,3 +80,26 @@
 @keyframes gw-peekr { 0% { transform: translateX(105%); } 18% { transform: translateX(30%); } 72% { transform: translateX(30%); } 100% { transform: translateX(105%); } }
 @keyframes gw-loom { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); } 35% { opacity: 0.55; } 70% { opacity: 0.55; } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); } }
 @media (prefers-reduced-motion: reduce) { .gw-fig { display: none; } }
+
+.gw-blackout { position: fixed; inset: 0; z-index: 2147483647; pointer-events: none; background: #000; opacity: 0;
+  animation: gw-lights 6s linear forwards; }
+@keyframes gw-lights {
+  0% { opacity: 0; } 4% { opacity: 1; } 6% { opacity: 0.1; } 9% { opacity: 1; } 12% { opacity: 0.4; }
+  15%, 90% { opacity: 1; } 100% { opacity: 0; } }
+.gw-bfig { position: absolute; left: 50%; top: 50%; opacity: 0; transform: translate(-50%, -50%) scale(0.55);
+  animation: gw-loomer 6s ease-in forwards; }
+.gw-bfig img, .gw-bfig svg { height: 70vh; width: auto; display: block; filter: drop-shadow(0 0 35px rgba(210, 210, 255, 0.6)) brightness(1.1); }
+.gw-bfig svg { width: calc(70vh * 0.83); }
+@keyframes gw-loomer {
+  0%, 30% { opacity: 0; transform: translate(-50%, -50%) scale(0.55); }
+  38% { opacity: 0.5; }
+  44% { opacity: 0; }
+  52% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.75); }
+  78% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.0); }
+  84% { opacity: 1; transform: translate(-50%, -50%) scale(1.45); }
+  90%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); } }
+.gw-btxt { position: absolute; left: 0; right: 0; bottom: 12vh; text-align: center; padding: 0 8vw;
+  font: italic 30px/1.4 Georgia, serif; color: rgba(225, 215, 250, 0.9); text-shadow: 0 0 18px rgba(150, 130, 230, 0.7);
+  opacity: 0; animation: gw-btxt 6s ease forwards; }
+@keyframes gw-btxt { 0%, 20% { opacity: 0; } 32%, 70% { opacity: 1; } 80%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gw-blackout { display: none; } }

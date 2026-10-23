@@ -131,7 +131,8 @@
   }
   function banishAll() {
     clearAtmosphere();
-    document.querySelectorAll(".gw-caption,.gw-fog,.gw-floater,.gw-eyes,.gw-scrawl,.gw-fig").forEach(n => n.remove());
+    document.querySelectorAll(".gw-caption,.gw-fog,.gw-floater,.gw-eyes,.gw-scrawl,.gw-fig,.gw-blackout").forEach(n => n.remove());
+    blackActive = false;
   }
   try {
     chrome.storage.onChanged.addListener(ch => { if (ch.enabled && ch.enabled.newValue === false) banishAll(); });
@@ -211,6 +212,43 @@
     setTimeout(() => t.remove(), 10500);
   }
 
+  let blackActive = false;
+  function thump() {
+    try {
+      const A = new (window.AudioContext || window.webkitAudioContext)();
+      const beat = t => {
+        const o = A.createOscillator(), g = A.createGain();
+        o.type = "sine"; o.frequency.setValueAtTime(70, A.currentTime + t); o.frequency.exponentialRampToValueAtTime(38, A.currentTime + t + 0.18);
+        g.gain.setValueAtTime(0.0001, A.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(0.5, A.currentTime + t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, A.currentTime + t + 0.28);
+        o.connect(g); g.connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + 0.3);
+      };
+      [0.9, 1.15, 2.1, 2.35, 3.3, 3.55].forEach(beat);
+      setTimeout(() => A.close().catch(() => {}), 5000);
+    } catch (e) {}
+  }
+  async function blackout(line) {
+    if (blackActive || !alive() || reduced()) return;
+    blackActive = true;
+    const imgs = await loadImgs();
+    const src = imgs.length ? imgs[Math.floor(Math.random() * imgs.length)] : null;
+    const lines = ["i turned off the lights.", "don't look away.", "i was never in the textbox.", "you are not alone in this tab.", "look behind the screen."];
+    const el = document.createElement("div");
+    el.className = "gw-blackout";
+    const fig = document.createElement("div");
+    fig.className = "gw-bfig";
+    if (src) { const im = document.createElement("img"); im.src = src; im.alt = ""; fig.appendChild(im); }
+    else fig.innerHTML = GHOST_SVG;
+    const tx = document.createElement("div");
+    tx.className = "gw-btxt";
+    tx.textContent = line || lines[Math.floor(Math.random() * lines.length)];
+    el.append(fig, tx);
+    document.documentElement.appendChild(el);
+    thump();
+    setTimeout(() => { el.remove(); blackActive = false; }, 6200);
+  }
+
   let imgCache = null, sizeSetting = "large";
   const SIZE_VH = { small: 18, medium: 30, large: 45, huge: 65 };
   async function loadImgs() {
@@ -242,6 +280,7 @@
     fog();
     if (stage < 2) return;
     eyes();
+    if (force || Math.random() < (stage >= 3 ? 0.6 : 0.3)) setTimeout(() => { if (alive()) blackout(null); }, 2200);
     if (!skipText) scrawl(line);
     if (reduced()) return;
     const peeks = ["peekb", "peekl", "peekr"];
@@ -270,7 +309,7 @@
       if (m && m.type === "summon") {
         allowed().then(ok => {
           if (!ok) { sendResponse({ ok: false }); return; }
-          lastApp = 0; setAtmosphere(3); apparition(3, null);
+          lastApp = 0; setAtmosphere(3); apparition(3, null); setTimeout(() => blackout(null), 1500);
           sendResponse({ ok: true });
         });
         return true;
@@ -400,6 +439,8 @@
 
   document.addEventListener("keydown", e => {
     hideGhost();
+    document.querySelectorAll(".gw-blackout").forEach(n => n.remove());
+    blackActive = false;
     if (e.key === "Escape" && alive()) {
       banishAll();
       const t = Date.now();
