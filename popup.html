@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  body{width:260px;margin:0;padding:14px;background:#14141a;color:#dcdce4;font:14px system-ui,sans-serif}
+  h1{font-size:16px;margin:0 0 10px}
+  .row{display:flex;align-items:center;justify-content:space-between;margin:10px 0}
+  button{width:100%;padding:8px;margin-top:8px;border:0;border-radius:6px;background:#2b2b38;color:#eee;cursor:pointer;font-size:13px}
+  button:hover{background:#3a3a4c}
+  #haunt{background:#4b3a7a}
+  #status{font-size:12px;color:#9a9ab0;margin-top:10px;min-height:16px}
+  a{color:#9a9ab0;font-size:12px}
+</style></head>
+<body>
+  <h1>👻 Ghostwriter</h1>
+  <div class="row"><span>Enabled</span><input type="checkbox" id="enabled"></div>
+  <div class="row"><span>Demo mode (fast)</span><input type="checkbox" id="demo"></div>
+  <div id="host" style="font-size:12px;color:#9a9ab0"></div>
+  <button id="haunt">Haunt this site</button>
+  <button id="summon" style="background:#7a3a4b">👻 Summon now (test)</button>
+  <button id="jump" style="background:#6a3a5a">Jump to stage 3 (test)</button>
+  <button id="reset">Reset haunting (stage 0)</button>
+  <button id="clear">Clear memories</button>
+  <div id="stage" style="font-size:12px;color:#b9a6ff;margin-top:8px"></div>
+  <div id="status"></div>
+  <a href="#" id="opts">Options / API key</a>
+  <script src="popup.js"></script>
+</body></html>

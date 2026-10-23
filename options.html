@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Ghostwriter options</title>
+<style>
+  body{max-width:520px;margin:30px auto;padding:0 16px;font:15px system-ui,sans-serif;background:#14141a;color:#dcdce4}
+  label{display:block;margin:14px 0 4px}
+  input[type=text],input[type=password],select{width:100%;padding:8px;border-radius:6px;border:1px solid #3a3a4c;background:#1e1e28;color:#eee;box-sizing:border-box}
+  .chk{display:flex;gap:8px;align-items:center;margin:12px 0}
+  button{padding:8px 14px;margin-right:8px;margin-top:16px;border:0;border-radius:6px;background:#4b3a7a;color:#fff;cursor:pointer}
+  small{color:#9a9ab0}
+  #msg{margin-top:12px;font-size:13px}
+</style></head>
+<body>
+<h2>👻 Ghostwriter options</h2>
+<label>Provider</label>
+<select id="provider"><option value="groq">Groq</option><option value="gemini">Gemini (Google AI Studio)</option></select>
+<label>API key</label>
+<input type="password" id="apiKey" placeholder="paste your key">
+<label>Model (khali chhoro to default)</label>
+<input type="text" id="model" placeholder="khali chhoro: khud chun leta hai">
+<small>Agar error aaye to provider ki site par se current model ka naam copy karke yahan daalo.</small>
+<label>Ghost size (screen par)</label>
+<select id="ghostSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option><option value="huge">Huge</option></select>
+<label>Meri apni ghost images (transparent PNG sab se behtar, max 12)</label>
+<div class="chk"><input type="checkbox" id="bgRemove" checked><span>Background khud hata do (JPG / JFIF / safed ya checkered background ke liye)</span></div>
+<label>Background hatane ki taqat: <span id="bgTolV">45</span></label>
+<input type="range" id="bgTol" min="10" max="120" value="45" style="width:100%">
+<small>Agar bhoot ka kuch hissa kat jaye to taqat kam karo. Agar background rah jaye to barhao. Badalne ke baad images dobara upload karo.</small>
+<input type="file" id="imgs" accept="image/*,.jfif" multiple style="margin-top:10px">
+<div id="thumbs" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+<button id="clearImgs" style="background:#3a3a4c">Clear images</button>
+<div class="chk"><input type="checkbox" id="memoryOn"><span>Remember my sentences locally (opt-in)</span></div>
+<div class="chk"><input type="checkbox" id="demoMode"><span>Demo mode (escalate faster)</span></div>
+<small>Jo tum likhte ho (aakhri 300 characters) tumhari chuni hui site se tumhari apni API key par AI provider ko jata hai. Password aur card fields kabhi nahi bheje jate.</small><br>
+<button id="save">Save</button><button id="test">Test API</button><button id="list">List my models</button>
+<div id="msg"></div><div id="models" style="margin-top:10px;font-size:13px"></div>
+<script src="imgtools.js"></script>
+<script src="options.js"></script>
+</body></html>

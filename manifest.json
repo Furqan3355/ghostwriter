@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Ghostwriter",
+  "version": "0.1.0",
+  "description": "A ghost whispers your next words. Opt-in per site. Overlay only. Esc banishes it.",
+  "permissions": ["storage", "activeTab", "unlimitedStorage"],
+  "host_permissions": [
+    "https://api.groq.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"],
+    "css": ["ghost.css"],
+    "run_at": "document_idle"
+  }],
+  "action": { "default_popup": "popup.html", "default_title": "Ghostwriter" },
+  "options_page": "options.html"
+}
